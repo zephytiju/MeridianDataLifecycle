@@ -11,7 +11,8 @@ Releases are ordinary public Python package releases under Apache-2.0.
    `meridian-storage-projection`, workflow `release.yml`, and environment
    `pypi`. This is the only owner-assisted namespace gate; credentials and MFA
    are never bypassed.
-5. Push a signed `vX.Y.Z` tag at the verified merge commit. GitHub Actions
-   rebuilds and attests the artifacts, creates the GitHub release, and publishes
-   through PyPI trusted publishing.
+5. Push an annotated `vX.Y.Z` tag at the verified merge commit. GitHub Actions
+   rebuilds the artifacts, records GitHub build-provenance attestations tied to
+   the workflow identity, creates the GitHub release, and publishes through PyPI
+   trusted publishing.
 6. Independently install the published wheel and verify its hashes and imports.
