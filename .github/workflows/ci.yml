@@ -23,7 +23,7 @@ jobs:
       - name: Verify release candidate
         run: python scripts/verify.py
       - name: Upload deterministic evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: verification-python-3.12
           path: |
