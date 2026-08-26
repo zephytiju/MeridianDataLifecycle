@@ -1,0 +1,160 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian.dev/contracts/data-lifecycle/meridian-migration-bundle.v1.schema.json",
+  "title": "Meridian Migration Bundle V1",
+  "type": "object",
+  "required": [
+    "formatVersion",
+    "bundleId",
+    "sourceSchemaFingerprint",
+    "targetSchemaFingerprint",
+    "steps",
+    "preconditions",
+    "validations",
+    "postconditions",
+    "compilerRequirements",
+    "estimatedLockClass",
+    "reversibility",
+    "digest"
+  ],
+  "$defs": {
+    "resourceRef": {
+      "type": "object",
+      "required": ["catalog", "namespace", "name"],
+      "properties": {
+        "catalog": { "enum": ["structured", "object", "cache", "evidence", "streaming"] },
+        "namespace": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["operationContract", "operationVersion", "guarantees", "minimumLimits"],
+      "properties": {
+        "operationContract": { "type": "string", "minLength": 1 },
+        "operationVersion": { "type": "string", "minLength": 1 },
+        "guarantees": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "minimumLimits": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "operation": {
+      "type": "object",
+      "required": [
+        "formatVersion",
+        "catalog",
+        "operationContract",
+        "operationVersion",
+        "resources",
+        "input",
+        "requirements",
+        "readOnly",
+        "idempotent"
+      ],
+      "properties": {
+        "formatVersion": { "const": "meridian-operation.v1" },
+        "catalog": { "enum": ["structured", "object", "cache", "evidence", "streaming"] },
+        "operationContract": { "type": "string", "minLength": 1 },
+        "operationVersion": { "type": "string", "minLength": 1 },
+        "resources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/resourceRef" }
+        },
+        "input": { "type": "object" },
+        "requirements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/requirement" }
+        },
+        "readOnly": { "type": "boolean" },
+        "idempotent": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "condition": {
+      "type": "object",
+      "required": ["name", "operation", "expectation"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "operation": { "$ref": "#/$defs/operation" },
+        "expectation": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "required": [
+        "stepId",
+        "kind",
+        "parameters",
+        "compilerRequirements",
+        "reversibility"
+      ],
+      "properties": {
+        "stepId": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "add-field",
+            "backfill",
+            "add-or-replace-index",
+            "tighten-constraint",
+            "transform-record",
+            "activate-schema-version",
+            "retire-physical-generation"
+          ]
+        },
+        "parameters": { "type": "object" },
+        "compilerRequirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "reversibility": {
+          "enum": [
+            "reversible",
+            "reactivate-retained-generation",
+            "restore-required"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "formatVersion": { "const": "meridian.migration-bundle.v1" },
+    "bundleId": { "type": "string", "minLength": 1 },
+    "sourceSchemaFingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "targetSchemaFingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } },
+    "preconditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "validations": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "postconditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "compilerRequirements": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "estimatedLockClass": { "enum": ["none", "shared", "exclusive"] },
+    "reversibility": {
+      "enum": ["reversible", "reactivate-retained-generation", "restore-required"]
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "additionalProperties": false
+}

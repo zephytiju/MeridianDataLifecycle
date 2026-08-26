@@ -1,0 +1,63 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian.dev/contracts/data-lifecycle/meridian-outbox.v1.schema.json",
+  "title": "Meridian Outbox Data V1",
+  "type": "object",
+  "required": [
+    "formatVersion",
+    "eventId",
+    "sourceCatalog",
+    "sourceResource",
+    "sourceSchema",
+    "sourceIdentity",
+    "sourceVersion",
+    "mutationKind",
+    "payload",
+    "immutableReference",
+    "targetLabels",
+    "occurredAt",
+    "operationContext",
+    "digest"
+  ],
+  "properties": {
+    "formatVersion": { "const": "meridian.outbox.v1" },
+    "eventId": { "type": "string", "minLength": 1 },
+    "sourceCatalog": {
+      "enum": ["structured", "object", "cache", "evidence", "streaming"]
+    },
+    "sourceResource": { "type": "string", "minLength": 1 },
+    "sourceSchema": { "type": "string", "minLength": 1 },
+    "sourceIdentity": true,
+    "sourceVersion": { "type": ["string", "integer", "null"] },
+    "mutationKind": { "type": "string", "minLength": 1 },
+    "payload": { "type": ["object", "null"] },
+    "immutableReference": { "type": ["object", "null"] },
+    "targetLabels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "operationContext": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "payload": { "type": "object" },
+        "immutableReference": { "type": "null" }
+      }
+    },
+    {
+      "properties": {
+        "payload": { "type": "null" },
+        "immutableReference": { "type": "object" }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,49 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian.dev/contracts/data-lifecycle/meridian-cache-envelope.v1.schema.json",
+  "title": "Meridian Cache Envelope V1",
+  "type": "object",
+  "required": [
+    "formatVersion",
+    "key",
+    "value",
+    "serializerId",
+    "schemaFingerprint",
+    "createdAt",
+    "expiresAt",
+    "sourceVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": "meridian.cache-envelope.v1"
+    },
+    "key": {
+      "oneOf": [
+        { "type": ["string", "number", "integer", "boolean"] },
+        { "type": "array" }
+      ]
+    },
+    "value": true,
+    "serializerId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaFingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "sourceVersion": {
+      "type": ["string", "integer", "null"]
+    }
+  },
+  "additionalProperties": false
+}

@@ -7,8 +7,5 @@ before opening a pull request.
 ```console
 python3 -m venv .venv
 .venv/bin/python -m pip install -e '.[test]'
-.venv/bin/ruff check .
-.venv/bin/ruff format --check .
-.venv/bin/mypy src tests
-.venv/bin/pytest
+.venv/bin/python scripts/verify.py
 ```

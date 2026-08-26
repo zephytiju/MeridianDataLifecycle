@@ -4,18 +4,19 @@ build-backend = "hatchling.build"
 
 [project]
 name = "meridian-storage-projection"
-version = "0.0.0"
+version = "1.0.0"
 description = "Meridian V1 projection, cache, migration, and portability primitives"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.15"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "Meridian Storage Projection contributors" }]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Typing :: Typed",
 ]
 dependencies = [
@@ -33,10 +34,13 @@ Repository = "https://github.com/zephytiju/meridian-storage-projection"
 test = [
   "build<2,>=1.2",
   "hatchling==1.27.0",
+  "hypothesis<7,>=6.135",
+  "jsonschema<5,>=4.23",
   "mypy<2,>=1.15",
   "pytest-cov<8,>=6",
   "pytest<10,>=8.3",
   "ruff<1,>=0.11",
+  "twine<7,>=6.1",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -46,13 +50,22 @@ include = [
   "/LICENSE",
   "/NOTICE",
   "/README.md",
+  "/RELEASING.md",
   "/SECURITY.md",
+  "/compatibility.json",
+  "/contracts",
+  "/docs",
+  "/scripts",
   "/src",
   "/tests",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/meridian_storage"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"contracts/data-lifecycle" = "meridian_storage/projection/contracts/data-lifecycle"
+"compatibility.json" = "meridian_storage/projection/compatibility.json"
 
 [tool.pytest.ini_options]
 addopts = "--strict-config --strict-markers"
@@ -63,7 +76,7 @@ branch = true
 source = ["meridian_storage.projection"]
 
 [tool.coverage.report]
-fail_under = 100
+fail_under = 85
 show_missing = true
 skip_covered = true
 

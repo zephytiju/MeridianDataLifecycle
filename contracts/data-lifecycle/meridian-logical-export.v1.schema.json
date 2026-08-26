@@ -1,0 +1,70 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian.dev/contracts/data-lifecycle/meridian-logical-export.v1.schema.json",
+  "title": "Meridian Logical Export V1",
+  "type": "object",
+  "required": [
+    "formatVersion",
+    "exportId",
+    "createdAt",
+    "metadata",
+    "boundary",
+    "partitions",
+    "digest"
+  ],
+  "properties": {
+    "formatVersion": { "const": "meridian.logical-export.v1" },
+    "exportId": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "metadata": {
+      "type": "object",
+      "required": ["namespaces", "schemas", "resources", "extensions"],
+      "properties": {
+        "namespaces": { "type": "array", "items": { "type": "object" } },
+        "schemas": { "type": "array", "items": { "type": "object" } },
+        "resources": { "type": "array", "items": { "type": "object" } },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "boundary": {
+      "type": "object",
+      "required": ["boundaryId", "consistency", "startWatermark", "endWatermark"],
+      "properties": {
+        "boundaryId": { "type": "string", "minLength": 1 },
+        "consistency": { "enum": ["consistent-boundary", "live-read"] },
+        "startWatermark": { "type": "string", "minLength": 1 },
+        "endWatermark": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "partitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "partitionId",
+          "artifactRef",
+          "count",
+          "bytes",
+          "minimumLogicalId",
+          "maximumLogicalId",
+          "sha256"
+        ],
+        "properties": {
+          "partitionId": { "type": "string", "minLength": 1 },
+          "artifactRef": { "type": "string", "minLength": 1 },
+          "count": { "type": "integer", "minimum": 0 },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "minimumLogicalId": { "type": ["string", "null"] },
+          "maximumLogicalId": { "type": ["string", "null"] },
+          "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,38 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "formatVersion": "meridian.data-lifecycle-contract.v1",
+  "distribution": "meridian-storage-projection",
+  "version": "1.0.0",
+  "catalogsOwned": [],
+  "catalogRegistry": [
+    "structured",
+    "object",
+    "cache",
+    "evidence",
+    "streaming"
+  ],
+  "cacheCatalogSurface": [
+    "create_resource",
+    "get",
+    "put",
+    "put_if_absent",
+    "compare_and_set",
+    "delete",
+    "invalidate"
+  ],
+  "cacheEnvelopeFormat": "meridian.cache-envelope.v1",
+  "migrationConditionOperationFormat": "meridian-operation.v1",
+  "logicalArtifactContract": "immutable-content-addressed",
+  "publicModules": [
+    "meridian_storage.projection.outbox",
+    "meridian_storage.projection.runner",
+    "meridian_storage.projection.cache",
+    "meridian_storage.projection.migration",
+    "meridian_storage.projection.portability",
+    "meridian_storage.projection.rebuild"
+  ],
+  "workerLifecycleOwner": "host-and-iac",
+  "engineLifecycleApi": false,
+  "snapshotStablePagination": false,
+  "onlineCrossEngineCutover": false
+}

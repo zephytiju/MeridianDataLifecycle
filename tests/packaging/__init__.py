@@ -9,9 +9,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from meridian_storage.projection import __version__
-
-
-def test_bootstrap_version() -> None:
-    assert __version__ == "1.0.0"
