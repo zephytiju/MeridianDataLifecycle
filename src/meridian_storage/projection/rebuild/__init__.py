@@ -10,8 +10,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from meridian_storage.projection import __version__
+"""Projection rebuild public API."""
 
+from meridian_storage.projection.rebuild.coordinator import (
+    RebuildActivation,
+    RebuildBoundary,
+    RebuildCoordinator,
+    RebuildEvidence,
+    RebuildGeneration,
+    RebuildHooks,
+    RebuildPlan,
+    RebuildTailResult,
+    RebuildValidation,
+)
 
-def test_bootstrap_version() -> None:
-    assert __version__ == "1.0.0"
+__all__ = [
+    "RebuildActivation",
+    "RebuildBoundary",
+    "RebuildCoordinator",
+    "RebuildEvidence",
+    "RebuildGeneration",
+    "RebuildHooks",
+    "RebuildPlan",
+    "RebuildTailResult",
+    "RebuildValidation",
+]

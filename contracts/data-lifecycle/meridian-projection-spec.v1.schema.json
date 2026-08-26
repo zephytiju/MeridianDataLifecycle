@@ -1,0 +1,37 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian.dev/contracts/data-lifecycle/meridian-projection-spec.v1.schema.json",
+  "title": "Meridian Projection Specification V1",
+  "type": "object",
+  "required": [
+    "name",
+    "sourceCatalog",
+    "source",
+    "targetCatalog",
+    "target",
+    "sourceSchema",
+    "targetSchema",
+    "eventualVisibilitySeconds"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "sourceCatalog": {
+      "enum": ["structured", "object", "cache", "evidence", "streaming"]
+    },
+    "source": { "type": "string", "minLength": 1 },
+    "targetCatalog": {
+      "enum": ["structured", "object", "cache", "evidence", "streaming"]
+    },
+    "target": { "type": "string", "minLength": 1 },
+    "sourceSchema": { "type": "string", "minLength": 1 },
+    "targetSchema": { "type": "string", "minLength": 1 },
+    "targetLabels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "eventualVisibilitySeconds": { "type": "number", "exclusiveMinimum": 0 }
+  },
+  "additionalProperties": false
+}
