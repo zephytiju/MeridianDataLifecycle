@@ -1,0 +1,82 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meridian-storage-projection"
+version = "0.0.0"
+description = "Meridian V1 projection, cache, migration, and portability primitives"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Meridian Storage Projection contributors" }]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = [
+  "meridian-storage-core==1.0.0",
+  "meridian-storage-semantics==1.0.0",
+  "meridian-storage-query==1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/zephytiju/meridian-storage-projection"
+Issues = "https://github.com/zephytiju/meridian-storage-projection/issues"
+Repository = "https://github.com/zephytiju/meridian-storage-projection"
+
+[project.optional-dependencies]
+test = [
+  "build<2,>=1.2",
+  "hatchling==1.27.0",
+  "mypy<2,>=1.15",
+  "pytest-cov<8,>=6",
+  "pytest<10,>=8.3",
+  "ruff<1,>=0.11",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/CHANGELOG.md",
+  "/CONTRIBUTING.md",
+  "/LICENSE",
+  "/NOTICE",
+  "/README.md",
+  "/SECURITY.md",
+  "/src",
+  "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/meridian_storage"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["meridian_storage.projection"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+explicit_package_bases = true
+mypy_path = "src"
+files = ["src", "tests"]
