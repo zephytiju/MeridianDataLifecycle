@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling==1.27.0"]
+requires = ["hatchling==1.32.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -32,8 +32,8 @@ Repository = "https://github.com/zephytiju/meridian-storage-projection"
 [project.optional-dependencies]
 test = [
   "build<2,>=1.2",
-  "hatchling==1.27.0",
-  "mypy<2,>=1.15",
+  "hatchling==1.32.0",
+  "mypy>=1.15,<3",
   "pytest-cov<8,>=6",
   "pytest<10,>=8.3",
   "ruff<1,>=0.11",
