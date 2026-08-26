@@ -43,7 +43,7 @@ jobs:
           PY
           python scripts/verify.py
       - name: Attest distributions
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: build/release/*
       - name: Create GitHub release
