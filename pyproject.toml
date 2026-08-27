@@ -26,9 +26,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/zephytiju/meridian-storage-projection"
-Issues = "https://github.com/zephytiju/meridian-storage-projection/issues"
-Repository = "https://github.com/zephytiju/meridian-storage-projection"
+Homepage = "https://github.com/zephytiju/MeridianDataLifecycle"
+Issues = "https://github.com/zephytiju/MeridianDataLifecycle/issues"
+Repository = "https://github.com/zephytiju/MeridianDataLifecycle"
 
 [project.optional-dependencies]
 test = [
