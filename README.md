@@ -14,7 +14,7 @@ it.
 ## Install
 
 ```console
-python -m pip install meridian-storage-projection==1.0.0
+python -m pip install meridian-storage-projection==1.0.1
 ```
 
 Python 3.12 through 3.14 is supported. Runtime dependencies are pinned to the
@@ -52,6 +52,15 @@ The runner advances a checkpoint only after the derived target acknowledges the
 exact source version. Crashed workers reclaim expired leases, duplicate delivery
 requires idempotent target writes, and poison records enter quarantine until an
 explicit operator retry.
+
+Construct the runner after `meridian.start()`. Both Resources must have the exact
+Schemas in the spec and resolved Bindings satisfying their declared Capability
+requirements. Construction performs no target writes or projector calls.
+
+Adapter authors can run the wheel's shared lifecycle fixtures via
+`meridian_storage.projection.testing`; see [conformance](docs/CONFORMANCE.md).
+The owner-only port does not fence an older attempt after the same owner is
+reused. Hosts must prevent overlapping owner reuse.
 
 ## Transparent read cache
 

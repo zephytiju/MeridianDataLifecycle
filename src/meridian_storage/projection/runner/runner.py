@@ -23,8 +23,9 @@ from typing import Protocol
 from uuid import uuid4
 
 from meridian_storage.semantics import CatalogName
+from meridian_storage.spi.capabilities import capability_violations
 
-from meridian_storage import Expression, Meridian, MeridianError, OperationResult
+from meridian_storage import Expression, Meridian, MeridianError, OperationResult, ResourceRef
 from meridian_storage.projection._canonical import ensure_utc, sha256_digest, utc_now
 from meridian_storage.projection.errors import ProjectionRejected
 from meridian_storage.projection.evidence import EvidenceSink, LifecycleEvidence, NullEvidenceSink
@@ -187,9 +188,43 @@ class ProjectionRunner:
         self._validate_bindings()
 
     def _validate_bindings(self) -> None:
-        # Catalog resolution is read-only and fails closed when a package or Binding is absent.
+        # Catalog resolution requires an already-started runtime. Inspect one
+        # immutable registry revision; never invoke the projector or open a session.
+        # These internal Core reads are covered against our exact released Core pin.
         self._meridian.catalog(self.spec.source_catalog)
         self._meridian.catalog(self.spec.target_catalog)
+        snapshot = self._meridian._snapshot_for_handle()
+        for role, catalog, name, schema_name in (
+            ("source", self.spec.source_catalog, self.spec.source, self.spec.source_schema),
+            ("target", self.spec.target_catalog, self.spec.target, self.spec.target_schema),
+        ):
+            try:
+                ref = ResourceRef.parse(name, catalog=catalog)
+            except (ValueError, TypeError) as error:
+                raise ProjectionRejected(f"invalid {role} Resource reference") from error
+            if ref.catalog != catalog:
+                raise ProjectionRejected(f"{role} Resource Catalog does not match projection spec")
+            resource = snapshot.resource(ref)
+            schema = resource.schema
+            if schema is None or schema_name not in (
+                str(schema),
+                f"{schema.logical_name}@{schema.version}",
+            ):
+                raise ProjectionRejected(f"{role} Resource Schema does not match projection spec")
+            snapshot.schema(schema.catalog, schema.namespace, schema.name, schema.version)
+            try:
+                binding = snapshot.binding_for(ref)
+            except KeyError as error:
+                raise ProjectionRejected(f"{role} Resource has no resolved Binding") from error
+            manifest = self._meridian._capability_manifests.get(binding.binding_id)
+            if (
+                manifest is None
+                or manifest.adapter_id != binding.adapter_id
+                or manifest.fingerprint != binding.capability_fingerprint
+            ):
+                raise ProjectionRejected(f"{role} Resource Binding Capability is unresolved")
+            if capability_violations(manifest, resource.requirements):
+                raise ProjectionRejected(f"{role} Resource requires unavailable capabilities")
 
     def _source(self, record: OutboxRecord) -> Mapping[str, object]:
         if record.data.payload is not None:

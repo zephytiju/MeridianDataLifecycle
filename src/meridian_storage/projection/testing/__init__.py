@@ -10,6 +10,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Package version."""
+"""Portable tests for injected OutboxPort implementations, shipped in the wheel."""
 
-__version__ = "1.0.1"
+from .outbox_conformance import (
+    OutboxConformanceReport,
+    OutboxConformanceTarget,
+    run_outbox_conformance,
+)
+
+__all__ = ["OutboxConformanceReport", "OutboxConformanceTarget", "run_outbox_conformance"]

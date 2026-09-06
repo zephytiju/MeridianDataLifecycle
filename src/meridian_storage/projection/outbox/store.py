@@ -38,7 +38,13 @@ _SENSITIVE_VALUE = re.compile(r"(?i)(password|secret|token|credential|endpoint)\
 
 
 class OutboxPort(Protocol):
-    """Durable adapter port required by :class:`ProjectionRunner`."""
+    """Durable adapter port required by :class:`ProjectionRunner`.
+
+    Completion and release check the current non-expired owner. This protocol
+    carries no claim generation: reusing an owner while an older attempt can
+    still call the port does not fence that attempt. Hosts must avoid overlapping
+    owner reuse. ``OutboxLease.attempt`` is observation metadata, not a token.
+    """
 
     def atomic_claim(
         self,
@@ -201,7 +207,10 @@ class InMemoryOutboxStore:
         current = ensure_utc(now or utc_now(), field="now")
         with self._lock:
             record = self._leased_record(event_id, owner=owner, now=current)
-            if acknowledged_source_version != record.data.source_version:
+            if (
+                type(acknowledged_source_version) is not type(record.data.source_version)
+                or acknowledged_source_version != record.data.source_version
+            ):
                 raise CheckpointConflict(
                     "target acknowledgement does not match the exact source version"
                 )

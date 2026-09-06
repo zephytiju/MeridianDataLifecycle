@@ -24,10 +24,12 @@ from meridian_storage.projection.evidence import InMemoryEvidenceSink
 from meridian_storage.projection.outbox import InMemoryOutboxStore, OutboxDataV1, OutboxState
 from meridian_storage.projection.runner import ProjectionRunner, ProjectionSpec
 from tests.conftest import MutableClock, result
+from tests.projection_support import ProjectionMetadata
 
 
-class FakeRuntime:
+class FakeRuntime(ProjectionMetadata):
     def __init__(self, execute: Callable[[Expression], OperationResult]) -> None:
+        super().__init__()
         self.execute_call = execute
         self.catalogs: list[str] = []
         self.expressions: list[Expression] = []
@@ -132,6 +134,7 @@ def test_projection_retryable_and_rejected(fixed_time: datetime) -> None:
     )
     assert runner.run_once().retryable == 1
     assert store.get("event-1").state is OutboxState.RETRYABLE
+    assert store.checkpoint(_event(fixed_time).partition_key).revision == 0
 
     rejected_store = InMemoryOutboxStore()
     rejected_store.append(_event(fixed_time))
@@ -207,3 +210,23 @@ def test_projection_accepts_exact_mapping_resource(fixed_time: datetime) -> None
         clock=lambda: fixed_time,
     )
     assert runner.run_once().completed == 1
+
+
+@pytest.mark.parametrize("ack", [4, "3", True, None])
+def test_bad_target_acknowledgement_cannot_advance_checkpoint(
+    fixed_time: datetime,
+    ack: str | int | None,
+) -> None:
+    store = InMemoryOutboxStore()
+    store.append(_event(fixed_time))
+    runner = ProjectionRunner(
+        meridian=cast(
+            Meridian, FakeRuntime(lambda expression: result({"acknowledgedSourceVersion": ack}))
+        ),
+        spec=_spec(),
+        project=_project,
+        outbox=store,
+        clock=lambda: fixed_time,
+    )
+    assert runner.run_once().quarantined == 1
+    assert store.checkpoint(_event(fixed_time).partition_key).revision == 0
