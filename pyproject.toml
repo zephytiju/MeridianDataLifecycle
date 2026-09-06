@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "meridian-storage-projection"
-version = "1.0.0"
+version = "1.0.1"
 description = "Meridian V1 projection, cache, migration, and portability primitives"
 readme = "README.md"
 requires-python = ">=3.12,<3.15"

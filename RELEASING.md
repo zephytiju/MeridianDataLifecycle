@@ -8,7 +8,7 @@ Releases are ordinary public Python package releases under Apache-2.0.
 3. Merge a green pull request to protected `main`.
 4. Before the first release, the PyPI owner configures the pending trusted
    publisher for owner `zephytiju`, repository
-   `meridian-storage-projection`, workflow `release.yml`, and environment
+   `MeridianDataLifecycle`, workflow `release.yml`, and environment
    `pypi`. This is the only owner-assisted namespace gate; credentials and MFA
    are never bypassed.
 5. Push an annotated `vX.Y.Z` tag at the verified merge commit. GitHub Actions

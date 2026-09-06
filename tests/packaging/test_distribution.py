@@ -77,11 +77,12 @@ def test_wheel_metadata_and_contents(distributions: tuple[Path, Path]) -> None:
         metadata = BytesParser(policy=default).parsebytes(archive.read(metadata_name))
 
     assert metadata["Name"] == "meridian-storage-projection"
-    assert metadata["Version"] == "1.0.0"
+    assert metadata["Version"] == "1.0.1"
     assert metadata["License-Expression"] == "Apache-2.0"
     assert set(metadata["Requires-Python"].split(",")) == {">=3.12", "<3.15"}
     assert set(metadata.get_all("Requires-Dist", [])) >= EXPECTED_REQUIREMENTS
     assert "meridian_storage/projection/py.typed" in names
+    assert "meridian_storage/projection/testing/outbox_conformance.py" in names
     assert "meridian_storage/projection/compatibility.json" in names
     assert any(name.endswith(".dist-info/licenses/LICENSE") for name in names)
     assert any(name.endswith(".dist-info/licenses/NOTICE") for name in names)
@@ -128,7 +129,8 @@ def test_wheel_installs_and_imports_outside_source_tree(
 ) -> None:
     wheel, _ = distributions
     environment = tmp_path / "venv"
-    venv.EnvBuilder(with_pip=True).create(environment)
+    # Standalone macOS Python needs its linked executable to locate its runtime.
+    venv.EnvBuilder(with_pip=True, symlinks=os.name != "nt").create(environment)
     python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     subprocess.run(
         [str(python), "-m", "pip", "install", "--no-deps", str(wheel)],
@@ -152,7 +154,13 @@ def test_wheel_installs_and_imports_outside_source_tree(
                 "meridian_storage.__path__ = [str(root), *meridian_storage.__path__]; "
                 "import meridian_storage.projection as p; "
                 "path=pathlib.Path(p.__file__).resolve(); "
-                "assert p.__version__ == '1.0.0'; "
+                "assert p.__version__ == '1.0.1'; "
+                "from meridian_storage.projection.testing import "
+                "OutboxConformanceTarget, run_outbox_conformance; "
+                "store=p.InMemoryOutboxStore(poison_threshold=2); "
+                "report=run_outbox_conformance(OutboxConformanceTarget("
+                "store,store.append,store.get,store.checkpoint,lambda:store)); "
+                "assert report.same_owner_completion == 'accepted-indistinguishable-owner'; "
                 "assert path.is_relative_to(pathlib.Path(sys.prefix).resolve()), path"
             ),
         ],

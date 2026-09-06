@@ -21,10 +21,12 @@ from meridian_storage import Expression, Meridian, OperationResult
 from meridian_storage.projection.outbox import InMemoryOutboxStore, OutboxDataV1, OutboxState
 from meridian_storage.projection.runner import ProjectionRunner, ProjectionSpec
 from tests.conftest import MutableClock, result
+from tests.projection_support import ProjectionMetadata
 
 
-class Runtime:
+class Runtime(ProjectionMetadata):
     def __init__(self) -> None:
+        super().__init__()
         self.writes = 0
 
     def catalog(self, name: str) -> object:
@@ -42,8 +44,8 @@ def test_crash_after_target_ack_replays_without_checkpoint_advance(fixed_time: d
     store = InMemoryOutboxStore()
     store.append(
         OutboxDataV1(
-            "cases",
-            "case@1",
+            "investigation.cases",
+            "investigation.case@1",
             "case-1",
             "put",
             source_version=7,
@@ -65,9 +67,17 @@ def test_crash_after_target_ack_replays_without_checkpoint_advance(fixed_time: d
 
     runner = ProjectionRunner(
         meridian=cast(Meridian, runtime),
-        spec=ProjectionSpec("p", "structured", "cases", "structured", "derived", "case@1", "d@1"),
+        spec=ProjectionSpec(
+            "p",
+            "structured",
+            "investigation.cases",
+            "structured",
+            "investigation.case_search",
+            "investigation.case@1",
+            "investigation.case_search@1",
+        ),
         project=lambda source, context: Expression(
-            "structured", "put", {"resource": "derived", "data": dict(source)}
+            "structured", "put", {"resource": "investigation.case_search", "data": dict(source)}
         ),
         outbox=store,
         acknowledgement=acknowledge,
