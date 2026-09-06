@@ -210,7 +210,7 @@ def real_facade() -> tuple[Meridian, RecordingAdapter]:
                     {
                         "name": "structured",
                         "package": provider.manifest().package_name,
-                        "contract": "1.x",
+                        "contract": "2.x",
                         "requiredFingerprint": provider.manifest().fingerprint,
                     }
                 ],

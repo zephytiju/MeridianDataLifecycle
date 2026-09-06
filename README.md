@@ -14,11 +14,11 @@ it.
 ## Install
 
 ```console
-python -m pip install meridian-storage-projection==1.0.1
+python -m pip install meridian-storage-projection==1.0.2
 ```
 
 Python 3.12 through 3.14 is supported. Runtime dependencies are pinned to the
-released Meridian Core, Semantics, and Query 1.0.0 contracts.
+released Meridian Core 1.0.1, Semantics 2.0.0, and Query 1.0.2 contracts.
 
 ## Projection
 
