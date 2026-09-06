@@ -145,3 +145,15 @@ durable SQL or process-restart proof, which belongs to the PostgreSQL adapter.
 
 The shared lifecycle fixtures published in 1.0.1 remain unchanged and run in this
 package's contract tests; there is no competing fixture suite or new owner protocol.
+
+## Approved initial durable integration profile (Lifecycle revision 55)
+
+[Released provider conformance](RELEASED_PROVIDER.md) adds a repository-published
+versioned-target example and a separate CI matrix using installed Projection
+1.0.2, PostgreSQL 2.1.0, Core 1.0.1, Semantics 2.0.0 and Query 1.0.2. The runtime
+package remains unchanged. `conformance/postgresql/test_released_runner.py`
+verifies restart at three crash boundaries, replay v1 after v2, exact v1 progress,
+latest-before-filter/tombstone reads, failure without progress, shared durable
+owner/expiry/retry conformance, bounded graceful drain and failed-drain termination
+with expired-claim recovery. The two shutdown outcomes are separate acceptance
+cases. The example and harness are pinned by their merged repository commit.
