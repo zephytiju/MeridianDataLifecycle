@@ -29,9 +29,9 @@ import meridian_storage
 
 ROOT = Path(__file__).parents[2]
 EXPECTED_REQUIREMENTS = {
-    "meridian-storage-core==1.0.0",
-    "meridian-storage-query==1.0.0",
-    "meridian-storage-semantics==1.0.0",
+    "meridian-storage-core==1.0.1",
+    "meridian-storage-query==1.0.2",
+    "meridian-storage-semantics==2.0.0",
 }
 
 
@@ -77,7 +77,7 @@ def test_wheel_metadata_and_contents(distributions: tuple[Path, Path]) -> None:
         metadata = BytesParser(policy=default).parsebytes(archive.read(metadata_name))
 
     assert metadata["Name"] == "meridian-storage-projection"
-    assert metadata["Version"] == "1.0.1"
+    assert metadata["Version"] == "1.0.2"
     assert metadata["License-Expression"] == "Apache-2.0"
     assert set(metadata["Requires-Python"].split(",")) == {">=3.12", "<3.15"}
     assert set(metadata.get_all("Requires-Dist", [])) >= EXPECTED_REQUIREMENTS
@@ -154,7 +154,7 @@ def test_wheel_installs_and_imports_outside_source_tree(
                 "meridian_storage.__path__ = [str(root), *meridian_storage.__path__]; "
                 "import meridian_storage.projection as p; "
                 "path=pathlib.Path(p.__file__).resolve(); "
-                "assert p.__version__ == '1.0.1'; "
+                "assert p.__version__ == '1.0.2'; "
                 "from meridian_storage.projection.testing import "
                 "OutboxConformanceTarget, run_outbox_conformance; "
                 "store=p.InMemoryOutboxStore(poison_threshold=2); "

@@ -2,12 +2,12 @@
   "$comment": "SPDX-License-Identifier: Apache-2.0",
   "formatVersion": "meridian.package-compatibility.v1",
   "package": "meridian-storage-projection",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "python": ">=3.12,<3.15",
   "dependencies": {
-    "meridian-storage-core": "==1.0.0",
-    "meridian-storage-semantics": "==1.0.0",
-    "meridian-storage-query": "==1.0.0"
+    "meridian-storage-core": "==1.0.1",
+    "meridian-storage-semantics": "==2.0.0",
+    "meridian-storage-query": "==1.0.2"
   },
   "catalogsOwned": [],
   "catalogsComposed": [
@@ -19,7 +19,7 @@
   ],
   "designBaseline": {
     "meridianHldRevision": 56,
-    "catalogsRevision": 70,
+    "catalogsRevision": 124,
     "engineAdaptersRevision": 24,
     "kafkaAdapterRevision": 6,
     "constructsRevision": 45,

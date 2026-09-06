@@ -21,9 +21,9 @@ identity, ACL, backup, restore, and recovery.
 | Apache-2.0 metadata, wheel/sdist contents and reproducibility | package metadata and `scripts/verify.py` | `tests/packaging/test_distribution.py` |
 
 The compatibility manifest locks HLD revision 56, Catalogs/Public Interfaces
-revision 70, Engine Adapters revision 24, Kafka Adapter revision 6, Constructs
+revision 124, Engine Adapters revision 24, Kafka Adapter revision 6, Constructs
 revision 45, and the observed package LLD revision 53 / Core runtime revision 69. Runtime dependencies are
-only the released Core, Semantics, and Query 1.0.0 distributions.
+only the released Core 1.0.1, Semantics 2.0.0 and Query 1.0.2 distributions.
 
 The release gate writes artifact, contract, dependency, test, and coverage
 evidence to `build/evidence/verification.json`; CI retains it with the exact
@@ -42,7 +42,7 @@ different Bindings: projection completion remains asynchronous.
 Validation is read-only. It invokes neither the projector, OutboxPort, adapter
 session nor external connection. The host still starts/stops Meridian and the
 runner, and injects its production OutboxPort. No factory is required. Internally,
-this library reads the pinned Core 1.0.0 registry snapshot and capability map;
+this library reads the pinned Core 1.0.1 registry snapshot and capability map;
 consumers receive no Binding IDs, Engine clients or physical locators. Actual
 projector Expression requirements are validated by Core when executed, since a
 pure application projector's future Expression cannot be known at construction.
@@ -54,7 +54,7 @@ it does not claim production adapter conformance.
 
 ## Shared OutboxPort lifecycle fixtures (1.0.1)
 
-Install `meridian-storage-projection==1.0.1` from PyPI. The wheel exports
+Install `meridian-storage-projection==1.0.2` from PyPI. The wheel exports
 `OutboxConformanceTarget` and `run_outbox_conformance` from
 `meridian_storage.projection.testing`; no test source checkout or pytest
 dependency is needed. The adapter test owns an empty isolated Resource/projection
@@ -113,3 +113,35 @@ Reusing the reference instance in `reopen` is only a lifecycle test. Durable
 storage, independent processes, atomicity under interruption and real engine
 proof remain the adapter task's acceptance gates. The report explicitly preserves
 this distinction.
+
+
+## Transactional writer validation (1.0.2)
+
+`TransactionalOutboxWriter.commit(mutation, intent)` keeps its existing signature.
+It joins the source Binding transaction, executes the mutation through Meridian,
+and checks the actual OperationResult before inserting intent. Resource and
+Catalog must match the single normalized source; the exact Schema comes from the
+transaction-pinned registry snapshot. Result contract/version, request fingerprint
+and registry fingerprint must match that normalized operation.
+
+The result must contain one record (a mapping or a singleton record sequence).
+Identity follows the Schema's ordered `identity` fields: one field is a scalar;
+multiple fields form an ordered tuple. Returned `recordVersion` must match the
+intent exactly, including type; absent version metadata requires `None`, never a
+fabricated zero/create sentinel. Included payload fields must agree with returned
+Data; immutable-reference intents still validate source identity and version.
+A put's supplied identity must also agree with its actual result. Mismatches raise
+`DataLifecycleValidationError` inside the transaction. Required write failures
+propagate; nested transactions retain Core's existing rollback behavior.
+
+Outbox creation calls Structured `put(mode="if_absent")` without an expected
+version. There is no read-before-write reconciliation and no group replay. Existing
+adapter recognition of the same request may return its original result without
+writing again; equal content alone never establishes replay. Independent duplicate
+creates conflict and roll back the source. Writer tests use installed Core and
+Semantics with a transactional recording SPI to verify rollback, replay, immutable
+intent and preservation of externally advanced processing state. They do not claim
+durable SQL or process-restart proof, which belongs to the PostgreSQL adapter.
+
+The shared lifecycle fixtures published in 1.0.1 remain unchanged and run in this
+package's contract tests; there is no competing fixture suite or new owner protocol.

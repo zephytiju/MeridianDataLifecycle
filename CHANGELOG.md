@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 — 2026-09-06
+
+- Validate source Resource, exact Schema, normalized Operation provenance, identity,
+  returned record version and included payload inside the writer transaction.
+- Create outbox intent with explicit `mode="if_absent"`; propagate conflicts and
+  write failures without overwriting intent or resetting processing progress.
+- Consume released Core 1.0.1, Semantics 2.0.0 and Query 1.0.2. Preserve the
+  writer/runner/OutboxPort signatures and shared lifecycle fixtures.
+
 ## 1.0.1 — 2026-09-06
 
 - Reject missing/mismatched projection Resources, Schemas, Bindings and declared
