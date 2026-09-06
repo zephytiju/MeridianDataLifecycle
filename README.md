@@ -144,3 +144,11 @@ packaging tests, branch coverage, dependency consistency, reproducible builds,
 wheel installation, and Twine metadata validation. Deterministic hashes and
 results are written to `build/evidence/verification.json`. See
 [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md) for acceptance traceability.
+
+## Released durable PostgreSQL integration
+
+The [version-addressed target and bounded host-drain recipe](docs/RELEASED_PROVIDER.md)
+uses the released Projection 1.0.2 and PostgreSQL 2.1.0 composition. It includes
+latest-version/tombstone reads and real-provider CI for restart, replay, exact
+acknowledgement, graceful drain and failed-drain recovery. The executable host
+retains lifecycle and termination ownership.
