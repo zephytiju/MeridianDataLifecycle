@@ -1,0 +1,4 @@
+# Exact public runtime prerequisites. Install with pip --require-hashes.
+meridian-storage-core==1.1.0 --hash=sha256:fc7372a17993f43ec285e3d52c0e9c458ef8e6f5ce13bb2d1b01b064aa8eff49 --hash=sha256:46f7b64b706112dad0b62f768bfaf8b05f22d73d87f77702a0b3f7fd61544ca7
+meridian-storage-semantics==2.0.1 --hash=sha256:5acd127b849a7898c33ed33308b595490447dddb5af9a7d2ec1df16b546279a4 --hash=sha256:982c94d2697592456b8d8ba862416a80a141c485d5349b3c0d3dcd0dd9ea3fcd
+meridian-storage-query==1.0.3 --hash=sha256:615035e5d50fd6b1cb6bbdc042eaca2c07cf7f2cc5fe0db68a2c66dd7e36455b --hash=sha256:1a1bfea2e77ccbef9da6b9b67fe9d003c4e7ae0dbad15cbe5de07d2be97cfb58

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "meridian-storage-projection"
-version = "1.0.2"
+version = "1.0.3"
 description = "Meridian V1 projection, cache, migration, and portability primitives"
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
@@ -20,9 +20,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "meridian-storage-core==1.0.1",
-  "meridian-storage-semantics==2.0.0",
-  "meridian-storage-query==1.0.2",
+  "meridian-storage-core<2,>=1.0.1",
+  "meridian-storage-semantics<3,>=2.0.0",
+  "meridian-storage-query<2,>=1.0.2",
 ]
 
 [project.urls]
@@ -58,6 +58,7 @@ include = [
   "/scripts",
   "/src",
   "/tests",
+  "/validation",
 ]
 
 [tool.hatch.build.targets.wheel]

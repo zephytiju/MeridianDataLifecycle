@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import os
 import subprocess
 import sys
@@ -25,13 +26,11 @@ from pathlib import Path
 
 import pytest
 
-import meridian_storage
-
 ROOT = Path(__file__).parents[2]
 EXPECTED_REQUIREMENTS = {
-    "meridian-storage-core==1.0.1",
-    "meridian-storage-query==1.0.2",
-    "meridian-storage-semantics==2.0.0",
+    "meridian-storage-core<2,>=1.0.1",
+    "meridian-storage-query<2,>=1.0.2",
+    "meridian-storage-semantics<3,>=2.0.0",
 }
 
 
@@ -77,7 +76,7 @@ def test_wheel_metadata_and_contents(distributions: tuple[Path, Path]) -> None:
         metadata = BytesParser(policy=default).parsebytes(archive.read(metadata_name))
 
     assert metadata["Name"] == "meridian-storage-projection"
-    assert metadata["Version"] == "1.0.2"
+    assert metadata["Version"] == "1.0.3"
     assert metadata["License-Expression"] == "Apache-2.0"
     assert set(metadata["Requires-Python"].split(",")) == {">=3.12", "<3.15"}
     assert set(metadata.get_all("Requires-Dist", [])) >= EXPECTED_REQUIREMENTS
@@ -111,6 +110,9 @@ def test_sdist_contains_source_tests_contracts_and_release_material(
         "README.md",
         "RELEASING.md",
         "compatibility.json",
+        "validation/dependencies.json",
+        "validation/core-1.0.1.txt",
+        "validation/core-1.1.0.txt",
         "contracts/data-lifecycle/meridian-cache-envelope.v1.schema.json",
         "src/meridian_storage/projection/__init__.py",
         "tests/packaging/test_distribution.py",
@@ -133,28 +135,47 @@ def test_wheel_installs_and_imports_outside_source_tree(
     venv.EnvBuilder(with_pip=True, symlinks=os.name != "nt").create(environment)
     python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     subprocess.run(
-        [str(python), "-m", "pip", "install", "--no-deps", str(wheel)],
+        [
+            str(python),
+            "-m",
+            "pip",
+            "install",
+            str(wheel),
+            *[
+                f"{name}=={importlib.metadata.version(name)}"
+                for name in (
+                    "meridian-storage-core",
+                    "meridian-storage-semantics",
+                    "meridian-storage-query",
+                )
+            ],
+        ],
         cwd=tmp_path,
         check=True,
         capture_output=True,
         text=True,
     )
-    process_environment = os.environ.copy()
-    assert meridian_storage.__file__ is not None
-    process_environment["PYTHONPATH"] = str(Path(meridian_storage.__file__).resolve().parent.parent)
+    subprocess.run(
+        [str(python), "-m", "pip", "check"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
     completed = subprocess.run(
         [
             str(python),
+            "-I",
             "-c",
             (
-                "import pathlib,site,sys; import meridian_storage; "
-                "root=next(pathlib.Path(item)/'meridian_storage' for item in "
-                "site.getsitepackages() if (pathlib.Path(item)/'meridian_storage'/'projection'"
-                "/'__init__.py').is_file()); "
-                "meridian_storage.__path__ = [str(root), *meridian_storage.__path__]; "
+                "import pathlib,sys; "
+                "import meridian_storage, meridian_storage.query, meridian_storage.semantics; "
+                "assert all(pathlib.Path(m.__file__).resolve().is_relative_to("
+                "pathlib.Path(sys.prefix).resolve()) for m in "
+                "(meridian_storage, meridian_storage.query, meridian_storage.semantics)); "
                 "import meridian_storage.projection as p; "
                 "path=pathlib.Path(p.__file__).resolve(); "
-                "assert p.__version__ == '1.0.2'; "
+                "assert p.__version__ == '1.0.3'; "
                 "from meridian_storage.projection.testing import "
                 "OutboxConformanceTarget, run_outbox_conformance; "
                 "store=p.InMemoryOutboxStore(poison_threshold=2); "
@@ -165,7 +186,6 @@ def test_wheel_installs_and_imports_outside_source_tree(
             ),
         ],
         cwd=tmp_path,
-        env=process_environment,
         check=True,
         capture_output=True,
         text=True,

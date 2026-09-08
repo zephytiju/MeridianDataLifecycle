@@ -2,7 +2,11 @@
 
 Releases are ordinary public Python package releases under Apache-2.0.
 
-1. Run `python scripts/verify.py` from a clean checkout.
+1. In a fresh environment, run
+   `pip install --require-hashes -r validation/core-1.1.0.txt`, then install
+   `.[test]` normally. Run
+   `python scripts/verify.py` from a clean checkout. CI also verifies the API
+   floor lock across Python 3.12–3.14; see `docs/dependency-compatibility.md`.
 2. Confirm the version agrees in `pyproject.toml`, `_version.py`, changelog, and
    compatibility manifest.
 3. Merge a green pull request to protected `main`.

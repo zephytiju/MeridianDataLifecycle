@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+- Express compatible public API bounds for Core, Semantics and Query; admit the
+  released Core 1.1.0 / Semantics 2.0.1 / Query 1.0.3 closure.
+- Validate exact hashed public dependency profiles on Python 3.12–3.14 and
+  install the candidate wheel in a clean environment with normal resolution.
+- Preserve lifecycle APIs, serialized contracts and historical real-provider
+  conformance; new provider-composition validation follows its owning release.
+
 ## 1.0.2 — 2026-09-06
 
 - Validate source Resource, exact Schema, normalized Operation provenance, identity,
