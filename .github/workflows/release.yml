@@ -27,7 +27,9 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install release tooling
-        run: python -m pip install '.[test]'
+        run: |
+          python -m pip install --require-hashes -r validation/core-1.1.0.txt
+          python -m pip install '.[test]'
       - name: Verify tag and release candidate
         env:
           RELEASE_TAG: ${{ github.ref_name }}

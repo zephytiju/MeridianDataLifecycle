@@ -6,6 +6,7 @@ before opening a pull request.
 
 ```console
 python3 -m venv .venv
-.venv/bin/python -m pip install -e '.[test]'
+.venv/bin/python -m pip install --require-hashes -r validation/core-1.1.0.txt
+.venv/bin/python -m pip install '.[test]'
 .venv/bin/python scripts/verify.py
 ```

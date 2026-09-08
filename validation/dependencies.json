@@ -1,0 +1,100 @@
+{
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "purpose": "Exact release-validation inputs; not runtime release allowlists.",
+  "profiles": {
+    "core-1.0.1": {
+      "meridian-storage-core": {
+        "version": "1.0.1",
+        "artifacts": [
+          {
+            "file": "meridian_storage_core-1.0.1-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/9e/fe/517f9dc313df8312dc7d56d509c83ccc787a44ce584198c3066bcabba1ee/meridian_storage_core-1.0.1-py3-none-any.whl",
+            "sha256": "5c873da941b7b5e14ca0d852d723f919e88a28bbf6cc48ae0ef985b64cac9a97"
+          },
+          {
+            "file": "meridian_storage_core-1.0.1.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/7c/2e/4c665a14752b4e72c5a9e6d603fb4c7f63e7d9a0ec17b08beed6cbec1979/meridian_storage_core-1.0.1.tar.gz",
+            "sha256": "9244a6fac589f402a82037f08e2d57a5ae4f9747c7c825b46cedf8c6d67f2b80"
+          }
+        ]
+      },
+      "meridian-storage-semantics": {
+        "version": "2.0.0",
+        "artifacts": [
+          {
+            "file": "meridian_storage_semantics-2.0.0-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/b6/43/e37cf7ce3beb4081bb0f9b59bfe7ca9c52565e2ec0cb818db25bd489d7cd/meridian_storage_semantics-2.0.0-py3-none-any.whl",
+            "sha256": "86c5f5c4d7f7af045b70e5e7480b21d794d166c37d2d76acb54c4720d49732d5"
+          },
+          {
+            "file": "meridian_storage_semantics-2.0.0.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/b1/5e/9cbf501bc2ee9e4efe64d0fd2e8b13020364932b20113cab63dcf9b323d6/meridian_storage_semantics-2.0.0.tar.gz",
+            "sha256": "a62cd1255e04a030847afa1e6553434dfe5efdf33dd7878401141b1c5e80c19b"
+          }
+        ]
+      },
+      "meridian-storage-query": {
+        "version": "1.0.2",
+        "artifacts": [
+          {
+            "file": "meridian_storage_query-1.0.2-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/50/7d/744ebfe6bb90f084dff5a56f2cf818a7d2ac94a7604e09cbd8c35dd68362/meridian_storage_query-1.0.2-py3-none-any.whl",
+            "sha256": "fa4d7b157a8fd1c1ba18cedab09dadf0e8f5e301f5734e3e38f41906853527b8"
+          },
+          {
+            "file": "meridian_storage_query-1.0.2.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/7a/10/3251d6213d0971cf4408cc5ccc59b9dd3fdfdf7199193616041dd3cdb952/meridian_storage_query-1.0.2.tar.gz",
+            "sha256": "782814c2ee94e4563029566a87e0b86ea87d62078b103ec5d3cdcc4763fab1fc"
+          }
+        ]
+      }
+    },
+    "core-1.1.0": {
+      "meridian-storage-core": {
+        "version": "1.1.0",
+        "artifacts": [
+          {
+            "file": "meridian_storage_core-1.1.0-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/aa/ab/eaeab612cacaef7a1ec798811a345f0e0934b4f7224c903c95a7550f8514/meridian_storage_core-1.1.0-py3-none-any.whl",
+            "sha256": "fc7372a17993f43ec285e3d52c0e9c458ef8e6f5ce13bb2d1b01b064aa8eff49"
+          },
+          {
+            "file": "meridian_storage_core-1.1.0.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/fd/c5/f429ffd7682ace9656bbfef07170d94109ee9fce61d793a5dc3392435631/meridian_storage_core-1.1.0.tar.gz",
+            "sha256": "46f7b64b706112dad0b62f768bfaf8b05f22d73d87f77702a0b3f7fd61544ca7"
+          }
+        ]
+      },
+      "meridian-storage-semantics": {
+        "version": "2.0.1",
+        "artifacts": [
+          {
+            "file": "meridian_storage_semantics-2.0.1-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/5c/41/5659dd92edd82405caad6a8c054df646f6ce02f9d2b14e5cf72fe11b5205/meridian_storage_semantics-2.0.1-py3-none-any.whl",
+            "sha256": "5acd127b849a7898c33ed33308b595490447dddb5af9a7d2ec1df16b546279a4"
+          },
+          {
+            "file": "meridian_storage_semantics-2.0.1.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/bf/bc/7c82c5c04fe2836f5d2afebc5dcdfade7bfd12950c44e3e9a2fa26c0ce77/meridian_storage_semantics-2.0.1.tar.gz",
+            "sha256": "982c94d2697592456b8d8ba862416a80a141c485d5349b3c0d3dcd0dd9ea3fcd"
+          }
+        ]
+      },
+      "meridian-storage-query": {
+        "version": "1.0.3",
+        "artifacts": [
+          {
+            "file": "meridian_storage_query-1.0.3-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/d6/b9/ef743ce02b3b1f61f95e1750c3771d86907b5a63d221d1487e200aa20e3e/meridian_storage_query-1.0.3-py3-none-any.whl",
+            "sha256": "615035e5d50fd6b1cb6bbdc042eaca2c07cf7f2cc5fe0db68a2c66dd7e36455b"
+          },
+          {
+            "file": "meridian_storage_query-1.0.3.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/81/3e/e757d80066549421db6345f6e3b7acd78f2e23e0b8bff2202ed2d0326a98/meridian_storage_query-1.0.3.tar.gz",
+            "sha256": "1a1bfea2e77ccbef9da6b9b67fe9d003c4e7ae0dbad15cbe5de07d2be97cfb58"
+          }
+        ]
+      }
+    }
+  }
+}

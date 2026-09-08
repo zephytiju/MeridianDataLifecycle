@@ -143,10 +143,10 @@ def test_compatibility_manifest_is_exact() -> None:
         dict[str, object], json.loads((ROOT / "compatibility.json").read_text(encoding="utf-8"))
     )
     assert compatibility["package"] == "meridian-storage-projection"
-    assert compatibility["version"] == "1.0.2"
+    assert compatibility["version"] == "1.0.3"
     assert compatibility["catalogsOwned"] == []
     assert compatibility["dependencies"] == {
-        "meridian-storage-core": "==1.0.1",
-        "meridian-storage-semantics": "==2.0.0",
-        "meridian-storage-query": "==1.0.2",
+        "meridian-storage-core": "<2,>=1.0.1",
+        "meridian-storage-semantics": "<3,>=2.0.0",
+        "meridian-storage-query": "<2,>=1.0.2",
     }

@@ -100,6 +100,7 @@ def _license_gate() -> None:
     for path in [
         *sorted((ROOT / "contracts").rglob("*.json")),
         ROOT / "compatibility.json",
+        ROOT / "validation" / "dependencies.json",
     ]:
         value = cast(dict[str, object], json.loads(path.read_text(encoding="utf-8")))
         if value.get("$comment") != "SPDX-License-Identifier: Apache-2.0":
@@ -109,6 +110,15 @@ def _license_gate() -> None:
 def main() -> int:
     version, compatibility = _version_contract()
     _license_gate()
+    profile = os.environ.get("MERIDIAN_VALIDATION_PROFILE", "core-1.1.0")
+    lock_path = ROOT / "validation" / "dependencies.json"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))["profiles"][profile]
+    installed = {name: importlib.metadata.version(name) for name in DEPENDENCIES}
+    expected = {name: package["version"] for name, package in lock.items()}
+    if installed != expected:
+        raise RuntimeError(
+            f"installed dependencies differ from selected validation lock: {profile}"
+        )
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     if RELEASE.exists():
         shutil.rmtree(RELEASE)
@@ -173,6 +183,10 @@ def main() -> int:
         field: sum(int(suite.attrib.get(field, "0")) for suite in suites)
         for field in ("tests", "failures", "errors", "skipped")
     }
+    if not test_totals["tests"] or any(
+        test_totals[key] for key in ("failures", "errors", "skipped")
+    ):
+        raise RuntimeError(f"required tests must all execute and pass: {test_totals}")
     dirty = bool(_output(["git", "status", "--porcelain", "--untracked-files=normal"]))
     report = {
         "formatVersion": "meridian.package-verification.v1",
@@ -182,7 +196,12 @@ def main() -> int:
         "gitDirty": dirty,
         "sourceDateEpoch": int(source_date_epoch),
         "python": ".".join(map(str, sys.version_info[:3])),
-        "dependencies": {name: importlib.metadata.version(name) for name in DEPENDENCIES},
+        "dependencies": installed,
+        "dependencyValidation": {
+            "profile": profile,
+            "lockSha256": _sha256(lock_path),
+            "artifacts": lock,
+        },
         "compatibility": compatibility,
         "contracts": contract_hashes,
         "artifacts": artifact_evidence,
